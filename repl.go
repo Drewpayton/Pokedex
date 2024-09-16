@@ -10,8 +10,10 @@ import (
 )
 
 func startRepl(cfg *config) {
+	// Creating a scanner
 	reader := bufio.NewScanner(os.Stdin)
 
+	// repl for loop that exits when user inputs "exit"
 	for {
 		fmt.Print("Pokedex > ")
 		reader.Scan()
