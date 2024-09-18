@@ -7,8 +7,7 @@ import (
 
 type Cache struct {
 	cacheMap map[string]cacheEntry
-	mu 		 sync.Mutex
-	interval time.Duration
+	mu 		 *sync.Mutex
 }
 
 type cacheEntry struct {
@@ -16,16 +15,15 @@ type cacheEntry struct {
 	val []byte
 }
 
-func NewCache(interval time.Duration) *Cache {
+func NewCache(interval time.Duration) Cache {
 	// Creates a new stuct with the new cachemap and interval time
-	c := &Cache{
+	c := Cache{
 		cacheMap: make(map[string]cacheEntry),
-		mu: sync.Mutex{},
-		interval: interval,
+		mu: &sync.Mutex{},
 	}
 
 	// concurrently running reaploop 
-	go c.reapLoop()
+	go c.reapLoop(interval)
 
 	return c
 }
@@ -51,17 +49,13 @@ func (c *Cache) Get(key string) ([]byte, bool) {
 	defer c.mu.Unlock()
 
 	// Finding key, if found then return the data and true
-	if val, ok := c.cacheMap[key]; ok {
-		return val.val, true
-	}
-
-	// Not found then return false and no data
-	return nil, false
+	val, ok := c.cacheMap[key]
+	return val.val, ok
 }
 
-func (c *Cache) reapLoop() {
+func (c *Cache) reapLoop(interval time.Duration) {
 	// Ticker to continuously count every 5 seconds
-	ticker := time.NewTicker(5000 * time.Millisecond)
+	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 
 	// Checking each value that is sent by the ticker.C channel
@@ -71,7 +65,7 @@ func (c *Cache) reapLoop() {
 
 		// Going through the map and comparing to see if there are older entries
 		for key, val := range c.cacheMap {
-			if currentTime.Sub(val.createdAt) > 5000*time.Millisecond{
+			if currentTime.Sub(val.createdAt) > interval{
 				// If entries are older then we delete
 				delete(c.cacheMap, key)
 			}

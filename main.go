@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// An instance of http.Client with a timeout of 5 seconds
-	pokeClient := pokeapi.NewClient(5 * time.Second)
+	pokeClient := pokeapi.NewClient(5 * time.Second, 5*time.Minute)
 	cfg := &config{
 		pokeapiClient: pokeClient,
 	}
