@@ -6,7 +6,7 @@ import (
 )
 
 // Go to the next page
-func commandMapf(cfg *config) error {
+func commandMapf(cfg *config, areaName string) error {
 	// Next location URL is the next set up locations and it sends that to list locations to get them.
 	locationResp, err := cfg.pokeapiClient.ListLocations(cfg.nextLocationURL)
 	if err != nil {
@@ -25,7 +25,7 @@ func commandMapf(cfg *config) error {
 }
 
 // Go to the previous page.
-func commandMapb(cfg *config) error {
+func commandMapb(cfg *config, areaName string) error {
 	// Checks if there on the "first page"
 	if cfg.prevLoactionsURL == nil {
 		return errors.New("you're already on the first page")
