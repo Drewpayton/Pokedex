@@ -32,11 +32,7 @@ func startRepl(cfg *config) {
 		
 		command, exists := getCommands()[commandName]
 		if exists {
-<<<<<<< HEAD
-			err := command.callback(cfg, "")
-=======
 			err := command.callback(cfg, areaName)
->>>>>>> refs/remotes/origin/main
 			if err != nil {
 				fmt.Println(err)
 			}
