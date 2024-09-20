@@ -78,7 +78,7 @@ func (c *Client) ListPokemon(pageUrl *string, areaName string) (Location, error)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return Location{}, nil
+		return Location{}, err
 	}
 
 	resp, err := c.httpClient.Do(req)
