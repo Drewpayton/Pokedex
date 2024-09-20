@@ -14,6 +14,16 @@ func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
 		url = *pageURL
 	}
 
+	if val, ok := c.cache.Get(url); ok {
+		locationResp := RespShallowLocations{}
+		err := json.Unmarshal(val, &locationResp)
+		if err != nil {
+			return RespShallowLocations{}, err
+		}
+
+		return locationResp, nil
+	}
+
 	// Get request that we will call later to get our data 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -44,5 +54,52 @@ func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
 		return RespShallowLocations{}, err
 	}
 
+	c.cache.Add(url, data)
 	return locationResp, nil
 } 
+
+
+func (c *Client) ListPokemon(pageUrl *string, areaName string) (Location, error) {
+	url := baseURL + "/location-area/" + areaName
+
+	if pageUrl != nil {
+		url = *pageUrl
+	}
+
+	if val, ok := c.cache.Get(url); ok {
+		locationResp := Location{}
+		err := json.Unmarshal(val, &locationResp)
+		if err != nil {
+			return Location{}, err
+		}
+
+		return locationResp, nil
+	}
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return Location{}, nil
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return Location{}, err
+	}
+
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return Location{}, err
+	}
+
+	locationResp := Location{}
+
+	err = json.Unmarshal(data, &locationResp)
+	if err != nil {
+		return Location{}, err
+	}
+	
+	c.cache.Add(url, data)
+	return locationResp, nil
+}

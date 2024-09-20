@@ -5,7 +5,7 @@ import (
 )
 
 // Welcomes to the program and lists all commands the user can do
-func commandHelp(cfg *config) error {
+func commandHelp(cfg *config, areaName string) error {
 	fmt.Println()
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")

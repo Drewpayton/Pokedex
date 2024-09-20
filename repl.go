@@ -12,6 +12,7 @@ import (
 func startRepl(cfg *config) {
 	// Creating a scanner
 	reader := bufio.NewScanner(os.Stdin)
+	areaName := ""
 
 	// repl for loop that exits when user inputs "exit"
 	for {
@@ -25,10 +26,13 @@ func startRepl(cfg *config) {
 		}
 
 		commandName := words[0]
+		if len(words) > 1 {
+			areaName = words[1]
+		}
 		
 		command, exists := getCommands()[commandName]
 		if exists {
-			err := command.callback(cfg)
+			err := command.callback(cfg, areaName)
 			if err != nil {
 				fmt.Println(err)
 			}
