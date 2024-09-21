@@ -59,12 +59,8 @@ func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
 } 
 
 
-func (c *Client) ListPokemon(pageUrl *string, areaName string) (Location, error) {
+func (c *Client) GetLocation (areaName string) (Location, error) {
 	url := baseURL + "/location-area/" + areaName
-
-	if pageUrl != nil {
-		url = *pageUrl
-	}
 
 	if val, ok := c.cache.Get(url); ok {
 		locationResp := Location{}

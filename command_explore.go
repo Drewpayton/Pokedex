@@ -1,14 +1,25 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func commandExplore(cfg *config, areaName string) error {
-	locationResp, err := cfg.pokeapiClient.ListPokemon(cfg.nextLocationURL, areaName)
+	if areaName == "" {
+		return errors.New("you must provide a location name")
+	} 
+	
+	location, err := cfg.pokeapiClient.GetLocation(areaName)
 	if err != nil {
 		return err
 	}
 
-	fmt.Print(locationResp)
+	fmt.Printf("Exploring %s...\n", location.Location.Name)
+	fmt.Println("Found Pokemon:")
+	for _, enc := range location.PokemonEncounter {
+		fmt.Printf(" - %s\n", enc.Pokemon.Name)
+	}
 
 	return nil
 }
