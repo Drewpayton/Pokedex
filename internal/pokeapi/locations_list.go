@@ -59,7 +59,7 @@ func (c *Client) ListLocations(pageURL *string) (RespShallowLocations, error) {
 } 
 
 
-func (c *Client) GetLocation (areaName string) (Location, error) {
+func (c *Client) GetLocation(areaName string) (Location, error) {
 	url := baseURL + "/location-area/" + areaName
 
 	if val, ok := c.cache.Get(url); ok {

@@ -1,5 +1,5 @@
 package main
 
-func commandCatch(pokemonName string) {
-
+func commandCatch(cfg *config, pokemonName string) error{
+	return nil
 }
