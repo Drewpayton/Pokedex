@@ -54,7 +54,7 @@ func cleanWords(text string) []string {
 type cliCommand struct {
 	name 		string
 	description string
-	callback 	func(cfg *config, location string) error
+	callback 	func(cfg *config, input string) error
 }
 
 type config struct {
@@ -89,6 +89,11 @@ func getCommands() map[string]cliCommand {
 			name: "explore",
 			description: "Explore pokemon in given area",
 			callback: commandExplore,
+		},
+		"catch": {
+			name: "catch",
+			description: "Catch a specific pokemon",
+			callback: commandCatch,
 		},
 	}
 }
