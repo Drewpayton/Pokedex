@@ -3,8 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-
-	"golang.org/x/exp/rand"
+	"math/rand"
 )
 
 func commandCatch(cfg *config, pokemonName string) error{
